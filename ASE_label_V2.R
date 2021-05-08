@@ -1,4 +1,5 @@
-#### préparation du GTF
+#### GTF preparation
+# here igenome_hg38.gtf as example
 dat<-read.table(file="igenome_hg38.gtf",header=FALSE,sep="\t",colClasses=c('character','character','character','integer','integer','character','character','character','character'))
 
 datex<-dat[dat[,3]=="exon",]
@@ -26,7 +27,7 @@ gene_id<-substr(ligne,nchar("gene_id")+2,fin-1)
 
 
 
-### addition de 2 variables pour comptage
+### addition of 2 variables for downstream process
 gene_tag<-vector(length=taille,mode="integer")
 gene_tag<-1
 transcript_tag<-vector(length=taille,mode="integer")
@@ -36,7 +37,7 @@ datex2<-data.frame(datex,transcript_id,gene_id,gene_tag,transcript_tag)
 
 
 
-### fichiers AS de MATS
+### AS files from MATS
 #1
 datSE<-read.table(file="fromGTF.SE.txt",header=TRUE,sep="\t",colClasses=c('integer','character','character','character','character','integer','integer','integer','integer','integer','integer'))
 
@@ -51,7 +52,8 @@ datRI<-read.table(file="fromGTF.RI.txt",header=TRUE,sep="\t",colClasses=c('integ
 
 
 
-### eviction trop petites différences
+### define the lowest ASE length
+# LIM is adjustable
 
 LIM<-12
 
@@ -70,23 +72,9 @@ datRI[,12]<-datRI[,10]-(datRI[,9]+1)
 datRI<-datRI[datRI[,12]>=LIM,c(1:11)]
 
 
-### epurage "smooth": unique feature
-
-#datSE[,12]<-datSE[,6]+datSE[,7]
-#datSE<-datSE[match(unique(datSE[,12]),datSE[,12]),]
-
-#datA3SS[,12]<-datA3SS[,6]+datA3SS[,7]
-#datA3SS<-datA3SS[match(unique(datA3SS[,12]),datA3SS[,12]),]
-
-#datA5SS[,12]<-datA5SS[,6]+datA5SS[,7]
-#datA5SS<-datA5SS[match(unique(datA5SS[,12]),datA5SS[,12]),]
-
-#datRI[,12]<-datRI[,6]+datRI[,7]
-#datRI<-datRI[match(unique(datRI[,12]),datRI[,12]),]
 
 
-
-### boucle sur datSE
+### loop on datSE
 
 datSE_taille<-nrow(datSE)
 for (i in 1:datSE_taille){
@@ -136,7 +124,7 @@ for (i in 1:datSE_taille){
 	incluNM<-as.vector(na.omit(sel0NM[match(communNM,sel0NM)]))
 	excluNM<-communNM[(communNM %in% incluNM)==FALSE]
 
-## ici astuce: match pour n'en prendre qu'un!!! pas mal...
+
 	datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(incluNM,datex2[,"transcript_id"]),"gene_tag"]
 	datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(excluNM,datex2[,"transcript_id"]),"gene_tag"]*9
 
@@ -147,7 +135,7 @@ for (i in 1:datSE_taille){
 
 
 
-### boucle sur datA3SS
+### Loop on datA3SS
 
 datA3SS_taille<-nrow(datA3SS)
 for (i in 1:datA3SS_taille){
@@ -194,7 +182,7 @@ for (i in 1:datA3SS_taille){
 	incluNM<-as.vector(na.omit(sel0NM[match(communNM,sel0NM)]))
 	excluNM<-as.vector(na.omit(sel1NM[match(communNM,sel1NM)]))
 
-## ici astuce: match pour n'en prendre qu'un!!! pas mal...
+
 	datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(incluNM,datex2[,"transcript_id"]),"gene_tag"]*2
 	datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(excluNM,datex2[,"transcript_id"]),"gene_tag"]*9
 
@@ -205,7 +193,7 @@ for (i in 1:datA3SS_taille){
 
 
 
-### boucle sur datA5SS
+### Loop on datA5SS
 
 datA5SS_taille<-nrow(datA5SS)
 for (i in 1:datA5SS_taille){
@@ -252,7 +240,7 @@ for (i in 1:datA5SS_taille){
 	incluNM<-as.vector(na.omit(sel0NM[match(communNM,sel0NM)]))
 	excluNM<-as.vector(na.omit(sel1NM[match(communNM,sel1NM)]))
 
-## ici astuce: match pour n'en prendre qu'un!!! pas mal...
+
 	datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(incluNM,datex2[,"transcript_id"]),"gene_tag"]*3
 	datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(excluNM,datex2[,"transcript_id"]),"gene_tag"]*9
 
@@ -263,7 +251,7 @@ for (i in 1:datA5SS_taille){
 
 
 
-### boucle sur datRI
+### Loop on datRI
 
 datRI_taille<-nrow(datRI)
 for (i in 1:datRI_taille){
@@ -299,7 +287,7 @@ for (i in 1:datRI_taille){
 	incluNM<-sel0NM
 	excluNM<-as.vector(na.omit(sel1NM[match(sel2NM,sel1NM)]))
 
-## ici astuce: match pour n'en prendre qu'un!!! pas mal...
+
 	datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(incluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(incluNM,datex2[,"transcript_id"]),"gene_tag"]*4
 	datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]<-datex2[match(excluNM,datex2[,"transcript_id"]),"transcript_tag"]+ datex2[match(excluNM,datex2[,"transcript_id"]),"gene_tag"]*9
 
@@ -310,7 +298,7 @@ for (i in 1:datRI_taille){
 
 
 
-### post-traitement
+### post-treatment
 
 unique_NM<-unique(datex2[,"transcript_id"])
 taille_unique<-length(unique_NM)
