@@ -1,19 +1,24 @@
-dat<-read.table(file="genes_mTEChi_indiv2.fpkm_tracking", header=TRUE,sep="\t")
+#### load gene frequency file from Tophat2
+# here example: genes_mTEChi.fpkm_tracking
+dat<-read.table(file="genes_mTEChi.fpkm_tracking", header=TRUE,sep="\t")
 
-dat_iso<-read.table(file="isoforms_mTEChi_indiv2.fpkm_tracking", header=TRUE,sep="\t")
+#### load isoform frequency file from Tophat2
+# here example: isoforms_mTEChi.fpkm_tracking
+dat_iso<-read.table(file="isoforms_mTEChi.fpkm_tracking", header=TRUE,sep="\t")
 
-dat_incl<-read.csv(file="datfin2_close_LIM12_V2.csv",header=TRUE)
+#### load ASE_label_output.csv file from ASE_label_V2.R or ASE_label_V3.R
+# here example: ASE_label_output.csv
+dat_incl<-read.csv(file="ASE_label_output.csv",header=TRUE)
 
 dat<-dat[dat[,"gene_short_name"]!="-",]
 
 dat<-dat[dat$FPKM>0,]
-#dat_iso<-dat_iso[dat_iso$FPKM>0,]
 
 
 
-#########
 
-#locus_unic<-unique(dat$gene_id)
+
+
 I<-vector(mode="numeric",length=nrow(dat))
 
 glob<-matrix(data=NA,nrow=1,ncol=2)
@@ -28,7 +33,7 @@ for (i in 1:nrow(dat)){
 		
 		for (k in 1:MAX){
 		
-#			Isub<-NA
+
 			comp<-as.integer(substr(as.character(sub_incl$code),nchar(as.character(sub_incl$code))-k+1,nchar(as.character(sub_incl$code))-k+1))
 			comp[is.na(comp)]<-0
 			
@@ -60,5 +65,5 @@ for (i in 1:nrow(dat)){
 
 dat2<-data.frame(dat,I)
 
-#write.table(dat2,file="gene_exp.diff_INCL_smooth_value_1_multi_",row.names=FALSE,sep="\t",quote=FALSE)
+
 write.csv(na.omit(glob),file="PSI_ASE_output.csv",row.names=FALSE)
