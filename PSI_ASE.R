@@ -61,4 +61,4 @@ for (i in 1:nrow(dat)){
 dat2<-data.frame(dat,I)
 
 #write.table(dat2,file="gene_exp.diff_INCL_smooth_value_1_multi_",row.names=FALSE,sep="\t",quote=FALSE)
-write.csv(na.omit(glob),file="glob_close_mTEChi_indiv2.csv",row.names=FALSE)
+write.csv(na.omit(glob),file="PSI_ASE_output.csv",row.names=FALSE)
