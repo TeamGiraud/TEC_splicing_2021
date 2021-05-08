@@ -330,4 +330,4 @@ datfin<-data.frame(unique_NM,gene,code)
 
 datfin2<-datfin[order(datfin[,"gene"],decreasing=F),]
 
-write.csv(datfin2,file="ASE_label_V2_output.csv",row.names=FALSE)
+write.csv(datfin2,file="ASE_label_output.csv",row.names=FALSE)
